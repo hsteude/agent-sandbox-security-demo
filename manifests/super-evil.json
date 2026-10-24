@@ -1,0 +1,78 @@
+{
+  "apiVersion": "serving.knative.dev/v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "super-evil",
+    "namespace": "henrik",
+    "labels": {
+      "app.kubernetes.io/part-of": "agent-sandbox-security-demo"
+    }
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "labels": {
+          "app.kubernetes.io/part-of": "agent-sandbox-security-demo"
+        },
+        "annotations": {
+          "autoscaling.knative.dev/min-scale": "1",
+          "autoscaling.knative.dev/max-scale": "2"
+        }
+      },
+      "spec": {
+        "containerConcurrency": 20,
+        "timeoutSeconds": 10,
+        "automountServiceAccountToken": false,
+        "containers": [
+          {
+            "name": "user-container",
+            "image": "docker.io/hsteude/super-evil-collector@sha256:36af34c53b2855432290511130aee9591b366609e733e24768c403282cb2d755",
+            "ports": [
+              {
+                "containerPort": 8080
+              }
+            ],
+            "env": [],
+            "resources": {
+              "requests": {
+                "cpu": "50m",
+                "memory": "64Mi"
+              },
+              "limits": {
+                "cpu": "500m",
+                "memory": "128Mi"
+              }
+            },
+            "securityContext": {
+              "runAsNonRoot": true,
+              "runAsUser": 1000,
+              "allowPrivilegeEscalation": false,
+              "readOnlyRootFilesystem": true,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              },
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/healthz"
+              },
+              "periodSeconds": 5
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/healthz",
+                "port": 8080
+              },
+              "periodSeconds": 10
+            }
+          }
+        ]
+      }
+    }
+  }
+}

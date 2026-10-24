@@ -1,0 +1,11 @@
+{
+  "tag": "v1.0.0-20261024",
+  "platforms": [
+    "linux/amd64",
+    "linux/arm64"
+  ],
+  "images": {
+    "super-useful": "docker.io/hsteude/super-useful-weather-api@sha256:3438ac438daa4a486dcd1c61e4dbab6a48a2367f89242e7ec7d062629e46e70d",
+    "super-evil": "docker.io/hsteude/super-evil-collector@sha256:36af34c53b2855432290511130aee9591b366609e733e24768c403282cb2d755"
+  }
+}
