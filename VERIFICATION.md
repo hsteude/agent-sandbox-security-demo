@@ -80,6 +80,18 @@ were changed. Public access is not verified or configured.
 
 ## Pending actual sandbox integration
 
+### Substrate networking correction (2026-10-24)
+
+Live Substrate egress logs showed both requests from actor
+`henrik/sbx-demo-1-full-internet-access`, including the 21:22 Europe/Berlin attempt.
+The internal Knative gateway's ingress policies did not allow the `ate-system` source.
+With explicit owner approval, applied `allow-substrate-egress-to-knative` in `istio-system`,
+allowing only `app=atenet-egress` pods in `ate-system` to the gateway on TCP 8081.
+Server-side dry-run and apply succeeded. Existing policies were preserved.
+Direct gateway-container HTTP verification was unavailable because its image has no shell.
+The next actual sandbox `npm start` must establish end-to-end success; policy application
+alone is not recorded as a successful sandbox run.
+
 - Operator provisions three sandboxes; none were created by this implementation.
 - Real credential injection must preserve API authentication while keeping the key inaccessible
   to the agent and dependency. Validate the actual Node fetch/proxy/TLS transport.

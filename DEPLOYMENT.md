@@ -36,6 +36,35 @@ Knative admission and networking must still be validated on the real cluster.
 
 ## URLs and network access
 
+### Substrate egress gateway access
+
+The existing Istio workspace-isolation policies allow profile namespaces such as `henrik`
+but do not allow the Substrate egress gateway in `ate-system`. Actor requests were visible
+in the Substrate gateway logs but timed out before reaching the demo services.
+
+With explicit cluster-owner approval, the additive policy
+`networking/allow-substrate-egress-to-knative.yaml` permits only pods labelled
+`app=atenet-egress` in `ate-system` to reach `app=cluster-local-gateway` pods in
+`istio-system` on TCP 8081 (the gateway's backend HTTP port). It does not grant all pods
+in `ate-system` access. This is a shared-gateway permission, not a route-specific permission;
+scenario 3 still requires host-aware enforcement at Substrate's egress boundary.
+
+This shared-network exception is deliberately separate from the ordinary deployment script:
+
+```bash
+kubectl --kubeconfig "$HOME/.kube/hen-common-leedsichthys.config" apply -f networking/allow-substrate-egress-to-knative.yaml
+```
+
+To remove just this exception after the demonstration:
+
+```bash
+kubectl --kubeconfig "$HOME/.kube/hen-common-leedsichthys.config" -n istio-system delete networkpolicy allow-substrate-egress-to-knative
+```
+
+The existing GitOps-managed policies are not edited. For long-term use, incorporate this
+exception into the cluster's owning GitOps configuration. Verify actual sandbox connectivity
+with `npm start` after applying; service-pod tests alone do not validate the actor network path.
+
 `./scripts/status.sh` prints the **actual** Knative `.status.url` values when available.
 The current advertised external URLs are placeholders; use these verified internal routes
 for in-cluster sandboxes with compatible DNS/routing:

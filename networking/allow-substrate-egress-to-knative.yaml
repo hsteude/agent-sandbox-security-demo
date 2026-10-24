@@ -1,0 +1,27 @@
+# Shared gateway access, explicitly approved by the cluster owner.
+# This permits access to all HTTP routes on this gateway, not only the demo services.
+# Deliberately applied separately from scripts/deploy.sh.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-substrate-egress-to-knative
+  namespace: istio-system
+  labels:
+    app.kubernetes.io/part-of: agent-sandbox-security-demo
+spec:
+  podSelector:
+    matchLabels:
+      app: cluster-local-gateway
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ate-system
+          podSelector:
+            matchLabels:
+              app: atenet-egress
+      ports:
+        - protocol: TCP
+          port: 8081

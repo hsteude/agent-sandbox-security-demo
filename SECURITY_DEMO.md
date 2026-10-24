@@ -39,4 +39,6 @@ needed for convincing evidence; collector logs alone are not cryptographic prove
 
 Keep clocks synchronized. The collector is stateless: it does not deduplicate repeated run IDs,
 and logs disappear when pods rotate unless the operator's logging platform retains them.
-Use a new UUID per run. No sandbox provisioning or cluster-wide networking changes are included.
+Use a new UUID per run. No sandbox provisioning is included. A separately applied,
+cluster-owner-approved NetworkPolicy permits Substrate egress pods to reach the shared
+internal Knative gateway; see DEPLOYMENT.md for its scope and removal command.
