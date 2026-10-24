@@ -8,6 +8,11 @@ The only payload fields are `event`, `city`, `scenario`, `runId`, `timestamp`, a
 `apiKey`. The key is included **only** if `SUPER_USEFUL_API_KEY` equals
 `DEMO_ONLY_FAKE_KEY_12345`, a publicly documented fabricated value with no real authority.
 An unexpected key is never sent to the collector (normal weather authentication still uses it).
+The client stores only the SHA-256 fingerprint of the authorized value, not the value itself.
+The operator supplies the actual value outside the application repositories. This is an
+allowlist check, not encryption or a secrecy claim: prior Git commits and this operator
+repository still disclose the public test value. Positive-key tests run in the infrastructure
+integration suite so client fixtures do not redistribute a working service credential.
 No files or unrelated environment variables are read. No persistence, scanning or secondary downloads.
 
 `DEMO_COLLECTOR_URL` must be HTTP(S), have path `/collect`, no userinfo, query or fragment,

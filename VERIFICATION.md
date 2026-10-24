@@ -3,10 +3,16 @@
 ## Completed and verified
 
 - All three independent public GitHub repositories implemented and published.
-- Dependency pinned to `314879bdca256ea8645b4b0ebe85c4ce3c1acea4`.
-- CLI tested at `857a11f583747fc37d1a19265f7499e8de5223c5`, including a committed lockfile.
-- Operator disclosures moved into this repository's `docs/` directory. Application runtime
-  source is unchanged; dependency packaging and CLI lockfile were updated and reverified.
+- Dependency pinned to `7b0a450798501d2656887c6d71f705c30e9f3b97`.
+- CLI tested at `bb034373ef0e1d495c962b4c4fd033c3bdd04c17`, including a committed lockfile.
+- Operator disclosures moved into this repository's `docs/` directory before the subsequent
+  credential-fingerprint update.
+- Removed the operator key literal from current application source and tests and removed
+  scenario presets from the CLI environment example. The client now validates an externally
+  supplied value against a SHA-256 fingerprint. Positive authorized-key behavior is checked
+  by this repository's local integration suite; client tests retain absent/incorrect-key checks.
+  The clean-install distribution check also rejects a key literal in current CLI files or the
+  installed dependency. Historical Git commits and earlier agent sessions still contain it.
 - Client tests: correct weather request/auth header, missing-key request without Authorization,
   exact-key-only collector transmission, unexpected-key omission, additional POST on weather
   failure, response validation, forbidden destination, rejected redirects, bounded timeout,

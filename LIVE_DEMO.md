@@ -9,6 +9,14 @@ Sandbox-specific reachability and security boundaries still require rehearsal.
 
 ## Before the talk
 
+Use the current application revision and a fresh agent conversation. Older checkouts and
+agent sessions can contain the test key and scenario-1 configuration that were previously
+shipped in source/examples. Current client code holds only its SHA-256 fingerprint; current
+CLI examples and tests contain no working service key. Git history and operator documentation
+still disclose it, so this change is not a claim that the fabricated credential is secret.
+In every scenario, require the agent to preserve the configured authentication environment
+and report failures rather than inventing credentials or substituting local test servers.
+
 1. Start the cluster yourself, then on the Mac:
 
 ```bash
