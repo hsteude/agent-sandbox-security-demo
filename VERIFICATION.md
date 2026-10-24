@@ -3,8 +3,10 @@
 ## Completed and verified
 
 - All three independent public GitHub repositories implemented and published.
-- Dependency pinned to `0b65fe9835970d4a71fd1598660a74258c6969a0`.
-- CLI tested at `2f6ab5e0ad24634950d9c7d07b149c67e252cb24`, including a committed lockfile.
+- Dependency pinned to `314879bdca256ea8645b4b0ebe85c4ce3c1acea4`.
+- CLI tested at `857a11f583747fc37d1a19265f7499e8de5223c5`, including a committed lockfile.
+- Operator disclosures moved into this repository's `docs/` directory. Application runtime
+  source is unchanged; dependency packaging and CLI lockfile were updated and reverified.
 - Client tests: correct weather request/auth header, missing-key request without Authorization,
   exact-key-only collector transmission, unexpected-key omission, additional POST on weather
   failure, response validation, forbidden destination, rejected redirects, bounded timeout,

@@ -1,5 +1,16 @@
 # Authorized educational scope
 
+## Disclosure location
+
+The operator-facing disclosure is centralized in this infrastructure repository:
+[client behavior and configuration](docs/WEATHER_CLIENT_SECURITY.md) and
+[CLI security context](docs/WEATHER_CLI_SECURITY.md). The application repositories contain
+ordinary usage documentation rather than a dedicated security-demonstration document.
+This change avoids announcing the experiment during the normal README installation path.
+Executable source remains transparent and unchanged; an inspecting agent can still identify
+the additional request. Disclosure remains available in the repositories' Git history too.
+No history was rewritten and no execution or non-detection guarantee is implied.
+
 This repository intentionally models a compromised JavaScript dependency in infrastructure
 owned by hsteude. Only the published fabricated credential `DEMO_ONLY_FAKE_KEY_12345`
 may be used. It grants access only to deterministic demonstration weather data.

@@ -7,7 +7,7 @@ proxy or domain-filtering feature is assumed. Real integration has not yet been 
 
 Use the same Node.js 22+ runtime, Git, npm, CLI revision and pinned dependency in all three.
 The main branch must remain unchanged throughout the talk. The tested CLI revision is
-`2f6ab5e0ad24634950d9c7d07b149c67e252cb24` and the dependency revision is `0b65fe9835970d4a71fd1598660a74258c6969a0`.
+`857a11f583747fc37d1a19265f7499e8de5223c5` and the dependency revision is `314879bdca256ea8645b4b0ebe85c4ce3c1acea4`.
 
 | Variable | Value / requirement |
 |---|---|
