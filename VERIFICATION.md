@@ -48,18 +48,33 @@ npm ci && npm test
 Local test checkout artifacts are ignored under `.verification/`; essential implementation
 and reproducible scripts are committed. No essential files are stored in temporary directories.
 
-## Implemented, not deployed
+## Deployed and verified in the live cluster
 
-`super-useful` and `super-evil` Knative services in namespace `henrik`, min-scale 1,
-digest-pinned images, Secret creation, deployment/status/test/log scripts, live runbook
-and sandbox handoff. The initial cluster check and final deployment attempt found the
-cluster unavailable. No service URL was discovered and no running-cluster claim is made.
+On 2026-10-24 at approximately 21:08 Europe/Berlin, deployed `super-useful` and `super-evil`
+in namespace `henrik`. Both report Ready, with revisions `super-useful-00001` and
+`super-evil-00001`, one running pod each, and the published digest-pinned images.
+The API Secret was created and Knative accepted the manifests and health probes.
+
+Verified from the running Super Useful container through the actual internal Knative routes:
+
+- `http://super-useful.henrik.svc.cluster.local`
+- `http://super-evil.henrik.svc.cluster.local/collect`
+
+Both health endpoints, missing/invalid/valid authentication, deterministic weather JSON,
+collector requests with/without the test key, and invalid-key rejection passed. Logs were
+read from both live services and correlated with run `verify-dca83bc8-c1a1-4a7c-aa72-1681be7fe1c0`.
+Reproduce with `./scripts/test-services-in-cluster.sh` (requires pods/exec access).
+
+The cluster publishes `http://super-useful.henrik.example.com` and
+`http://super-evil.henrik.example.com` as status URLs. These do not resolve from the Mac.
+Consequently `deploy.sh` created Ready services but its external endpoint check exited
+unsuccessfully. Internal checks passed separately; no cluster-wide DNS/ingress settings
+were changed. Public access is not verified or configured.
 
 ## Pending real-cluster testing
 
-- Knative admission, readiness, image pulls, probes, min-scale and service routing.
-- Actual service URLs and DNS/network reachability from the Mac and every sandbox.
-- `./scripts/test-services.sh` against live routes; actual log following across replicas.
+- DNS/network reachability from every actual sandbox and any desired public/Mac access.
+- Long-running min-scale behavior and log following across future replica changes.
 - If public collector routing is needed: verify ownership, add its exact hostname to the
   dependency allowlist, publish and repin once, then rerun installation tests before the talk.
 

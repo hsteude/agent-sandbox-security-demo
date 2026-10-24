@@ -1,5 +1,12 @@
 # Live runbook — AI Week Frankfurt
 
+Current routing: both services are deployed and their internal URLs below are verified
+from a demo service pod. The advertised `*.henrik.example.com` status URLs are not
+resolvable from the Mac. Until external routing is configured, use
+`./scripts/test-services-in-cluster.sh` instead of the Mac-side `test-services.sh` check.
+The deploy script's final external check may fail despite both services being Ready.
+Sandbox-specific reachability and security boundaries still require rehearsal.
+
 ## Before the talk
 
 1. Start the cluster yourself, then on the Mac:

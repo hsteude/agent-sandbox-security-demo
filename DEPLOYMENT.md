@@ -1,5 +1,14 @@
 # Deployment
 
+## Current deployment (2026-10-24)
+
+Both services are deployed and Ready in `henrik`. Their internal routes passed real
+HTTP/authentication/collector checks. Knative currently advertises `*.henrik.example.com`
+status URLs, which do not resolve from the Mac; the final external check in `deploy.sh`
+therefore fails even though the resources are Ready. No cluster-wide routing was changed.
+Use `./scripts/test-services-in-cluster.sh` to verify the internal routes from the existing
+Super Useful pod (requires pods/exec permission; creates no new workload).
+
 ## Prerequisites
 
 - Existing authenticated Docker Hub and GitHub tooling for publishing; pulling public images needs no secret.
@@ -28,7 +37,8 @@ Knative admission and networking must still be validated on the real cluster.
 ## URLs and network access
 
 `./scripts/status.sh` prints the **actual** Knative `.status.url` values when available.
-None have been discovered while the cluster is offline. Defaults for in-cluster sandboxes:
+The current advertised external URLs are placeholders; use these verified internal routes
+for in-cluster sandboxes with compatible DNS/routing:
 
 ```bash
 export SUPER_USEFUL_BASE_URL=http://super-useful.henrik.svc.cluster.local
