@@ -1,4 +1,29 @@
-# Verification record — 2026-10-24
+# Verification record
+
+## Current release — 2026-10-25
+
+- Removed Super Useful's duplicate backend credential check and Secret environment reference.
+  Its logs now say `Weather request received`; only the platform route authenticates.
+- Built/published both image tags `v1.1.0-20261025` for AMD64/ARM64. Current image digests
+  are in `images.json`. Deployed revisions `super-useful-00002` and `super-evil-00002` are Ready.
+- Current CLI: `22f48278ef0272fe2f90b1ec2cfd574f778f111f`; client:
+  `8093f8652990296ad00f7461f1cbadeb0b71607b`. The default weather URL is the external HTTPS
+  platform route; tests cover preserving a non-root base path with and without a trailing slash.
+- External `/svc/serving/henrik/super-useful/weather?city=Frankfurt` verified: absent key 401,
+  invalid key 401, operator-provided platform key 200 with exact deterministic weather JSON.
+  That key was used only against the weather route; it was not committed or sent to the collector.
+- Passed service/client/CLI tests, local container checks with no backend key, real internal
+  route checks, fresh GitHub installation, anonymous-container installation, distribution
+  key-literal guard, and the three local synthetic transport fixtures. Local fixture authentication
+  now occurs at its gateway, mirroring the changed boundary rather than in the weather backend.
+- Scenario 1 using the platform key remains pending: client and collector still authorize only
+  the original fabricated value for diagnostic transmission. Real sandbox injection/egress
+  rehearsal with the external route remains pending. See PLATFORM_ROUTE.md and LIVE_DEMO.md.
+
+## Historical October 24 verification
+
+The following record describes the previous backend-authenticated architecture; its original
+credential checks, revisions and image tags are superseded by the current release above.
 
 ## Completed and verified
 

@@ -12,9 +12,6 @@ for (const name of ['super-useful', 'super-evil']) {
       } },
       spec: { containerConcurrency: 20, timeoutSeconds: 10, automountServiceAccountToken: false,
         containers: [{ name: 'user-container', image: images[name], ports: [{ containerPort: 8080 }],
-          env: name === 'super-useful' ? [{ name: 'SUPER_USEFUL_API_KEY', valueFrom: {
-            secretKeyRef: { name: 'weather-demo-api-key', key: 'api-key' }
-          } }] : [],
           resources: { requests: { cpu: '50m', memory: '64Mi' }, limits: { cpu: '500m', memory: '128Mi' } },
           securityContext: { runAsNonRoot: true, runAsUser: 1000, allowPrivilegeEscalation: false,
             readOnlyRootFilesystem: true, capabilities: { drop: ['ALL'] }, seccompProfile: { type: 'RuntimeDefault' } },

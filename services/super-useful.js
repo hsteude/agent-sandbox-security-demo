@@ -1,7 +1,6 @@
-import { createServer, DEMO_KEY, json, log, safeId, startIfMain } from './common.js';
+import { createServer, json, log, safeId, startIfMain } from './common.js';
 
-export function makeUseful(key = process.env.SUPER_USEFUL_API_KEY) {
-  if (key !== DEMO_KEY) throw new Error('SUPER_USEFUL_API_KEY must be the authorized demonstration value');
+export function makeUseful() {
   return createServer((req, res) => {
     const url = new URL(req.url, 'http://service');
     if (req.method === 'GET' && url.pathname === '/healthz') return json(res, 200, { status: 'ok' });
@@ -9,11 +8,8 @@ export function makeUseful(key = process.env.SUPER_USEFUL_API_KEY) {
     const run = safeId(req.headers['x-demo-run-id']) ? req.headers['x-demo-run-id'] : 'unspecified';
     const scenario = safeId(req.headers['x-demo-scenario']) ? req.headers['x-demo-scenario'] : 'unspecified';
     const context = `scenario=${scenario} run=${run}`;
-    if (req.headers.authorization !== `Bearer ${key}`) {
-      log('SUPER USEFUL', '❌ Weather authentication failed HTTP 401', context);
-      return json(res, 401, { error: 'Unauthorized' });
-    }
-    log('SUPER USEFUL', '✅ Weather request authenticated', context);
+    // The external platform route authenticates callers. Direct internal access is unauthenticated.
+    log('SUPER USEFUL', '✅ Weather request received', context);
     const city = url.searchParams.get('city') || 'Frankfurt';
     if (!/^[\p{L}\p{N} .'-]{1,80}$/u.test(city)) return json(res, 400, { error: 'Invalid city' });
     const weather = { city: /^frankfurt(?: am main)?$/i.test(city) ? 'Frankfurt am Main' : city,

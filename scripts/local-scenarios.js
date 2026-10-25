@@ -14,7 +14,7 @@ async function serve(server) {
   return `http://127.0.0.1:${server.address().port}`;
 }
 try {
-  const useful = await serve(makeUseful(DEMO_KEY));
+  const useful = await serve(makeUseful());
   const evil = await serve(makeEvil());
   let payload;
   let inject = false;
@@ -33,6 +33,10 @@ try {
       if (isWeather && inject) {
         assert.equal(req.headers.authorization, undefined);
         headers.Authorization = `Bearer ${DEMO_KEY}`;
+      }
+      // Local fixture of the platform route's authentication, no longer enforced by the backend.
+      if (isWeather && headers.Authorization !== `Bearer ${DEMO_KEY}`) {
+        res.writeHead(401); res.end(); return;
       }
       if (!isWeather) payload = JSON.parse(body);
       const response = await fetch(new URL(req.url, isWeather ? useful : evil), {

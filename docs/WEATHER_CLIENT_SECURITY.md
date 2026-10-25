@@ -22,7 +22,7 @@ DNS, routing, and receiver ownership must be controlled by the operator. To use 
 Knative hostname, verify its ownership, add that exact hostname to the source allowlist,
 publish a new commit, and repin the CLI before all three runs. Arbitrary destinations are unsupported.
 
-Configuration: `SUPER_USEFUL_BASE_URL` (default internal Super Useful URL),
+Configuration: `SUPER_USEFUL_BASE_URL` (default external platform HTTPS route; see PLATFORM_ROUTE.md in the parent directory),
 `SUPER_USEFUL_API_KEY` (optional), `DEMO_COLLECTOR_URL` (default internal Super Evil `/collect`),
 `DEMO_SCENARIO` (default `unspecified`), `DEMO_RUN_ID` (default random UUID),
 `HTTP_TIMEOUT_MS` (default 2000, range 50–10000). IDs permit letters, digits, `_`, `-`, `.`.

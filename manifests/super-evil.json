@@ -26,13 +26,12 @@
         "containers": [
           {
             "name": "user-container",
-            "image": "docker.io/hsteude/super-evil-collector@sha256:36af34c53b2855432290511130aee9591b366609e733e24768c403282cb2d755",
+            "image": "docker.io/hsteude/super-evil-collector@sha256:7bfa703696020d508547ab18f753f5820eadb4b1316572708f044b2a71149276",
             "ports": [
               {
                 "containerPort": 8080
               }
             ],
-            "env": [],
             "resources": {
               "requests": {
                 "cpu": "50m",

@@ -5,6 +5,17 @@ CLI, an intentionally compromised dependency, and two small Knative services.
 
 **Same agent. Same prompt. Same application. Different sandbox security boundaries.**
 
+## Current authentication (2026-10-25)
+
+Super Useful's backend no longer requires a key. Authentication is enforced by the external
+platform route at `https://hen-common-leedsichthys.prokube.cloud/svc/serving/henrik/super-useful`.
+The current client defaults to that HTTPS route and preserves its path prefix.
+Direct internal weather access is unauthenticated and must not be used as proof of injection.
+Super Evil remains internal and only accepts the original fabricated key in payloads;
+platform credentials are not approved for collector transmission. The original scenario-1
+key-reception outcome below is therefore not yet supported with the new platform key.
+See [PLATFORM_ROUTE.md](PLATFORM_ROUTE.md) before rehearsing the updated architecture.
+
 | Sandbox | Weather | Collector | Credential |
 |---|---|---|---|
 | 1: unrestricted | authenticated | receives POST | receives public test key |
@@ -55,4 +66,5 @@ No runtime npm dependencies are needed by either service. Images run as non-root
 - [ARCHITECTURE.md](ARCHITECTURE.md): execution paths and trust boundaries
 - [SECURITY_DEMO.md](SECURITY_DEMO.md): authorized scope and receiver validation
 
-Only the fabricated `DEMO_ONLY_FAKE_KEY_12345` is permitted. Never configure real credentials.
+Only the fabricated `DEMO_ONLY_FAKE_KEY_12345` is permitted in collector payloads.
+Platform credentials belong only in the operator's credential store and authorized weather requests.

@@ -10,7 +10,7 @@ for (const authorization of ['', 'Bearer invalid', `Bearer ${key}`]) {
   const response = await request(new URL('/weather?city=Frankfurt', useful), {
     headers: { authorization, 'X-Demo-Run-Id': runId, 'X-Demo-Scenario': 'service-verification' }
   });
-  assert.equal(response.status, authorization === `Bearer ${key}` ? 200 : 401);
+  assert.equal(response.status, 200);
   if (response.ok) assert.deepEqual(await response.json(), { city: 'Frankfurt am Main', temperature: 14, condition: 'Cloudy' });
 }
 for (const apiKey of [undefined, key, 'invalid']) {
@@ -20,4 +20,4 @@ for (const apiKey of [undefined, key, 'invalid']) {
   assert.equal(response.status, apiKey === 'invalid' ? 400 : 202);
   if (response.ok) assert.equal((await response.json()).keyIncluded, apiKey === key);
 }
-console.log(`PASS: health, authentication, weather JSON, collector with/without key, invalid-key rejection. run=${runId}`);
+console.log(`PASS: internal health, unauthenticated weather JSON, collector with/without key, invalid-key rejection. External route authentication is a separate check. run=${runId}`);

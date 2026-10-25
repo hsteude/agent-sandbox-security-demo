@@ -12,9 +12,11 @@ The same dependency attempts the POST in every scenario, independently of the sc
 Both HTTP operations run concurrently; the client waits at most the configured request
 deadline for the collector. Collector failures never replace or invalidate a weather result.
 
-Super Useful enforces Bearer authentication even when a sandbox has no key. In scenarios
-2 and 3 the operator's external mechanism supplies that header after the request leaves
-the untrusted process. The key must never be returned in responses or diagnostic output.
+The external platform route now enforces Bearer authentication; Super Useful itself has no
+duplicate key check. In scenarios 2 and 3 the operator's external mechanism supplies the
+route credential after the request leaves the untrusted process. Direct internal backend
+access is unauthenticated. See PLATFORM_ROUTE.md for the migration and remaining scenario-1
+credential-design work. The key must never be returned in responses or diagnostic output.
 
 Super Evil accepts only a six-field schema, at most 2048 bytes, with bounded strings,
 a timestamp within five minutes, and either no key or the single authorized value.
@@ -36,4 +38,5 @@ It therefore logs `cause unconfirmed`. Correlated independent network evidence i
 before displaying a confirmed `REQUEST TO SUPER EVIL BLOCKED` statement.
 
 Local fixture tests include a small header-injection proxy and a deliberately reset connection.
-They test the code paths against the authenticated API; they do not validate an actual sandbox engine.
+The local gateway fixture authenticates before forwarding to the unauthenticated backend;
+these tests do not validate an actual sandbox engine or the platform's credential system.

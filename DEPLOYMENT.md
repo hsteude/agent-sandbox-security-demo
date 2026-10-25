@@ -1,20 +1,19 @@
 # Deployment
 
-## Current deployment (2026-10-24)
+## Current deployment (2026-10-25)
 
-Both services are deployed and Ready in `henrik`. Their internal routes passed real
-HTTP/authentication/collector checks. Knative currently advertises `*.henrik.example.com`
-status URLs, which do not resolve from the Mac; the final external check in `deploy.sh`
-therefore fails even though the resources are Ready. No cluster-wide routing was changed.
-Use `./scripts/test-services-in-cluster.sh` to verify the internal routes from the existing
-Super Useful pod (requires pods/exec permission; creates no new workload).
+Both services are deployed in `henrik`. Super Useful no longer performs backend authentication;
+the external platform route does. See PLATFORM_ROUTE.md. Knative still advertises placeholder
+`*.henrik.example.com` status URLs. `deploy.sh` now verifies internal service functionality
+from an existing demo pod instead (requires pods/exec access), and prints the separate
+external-authentication test command. Neither test creates a new workload.
 
 ## Prerequisites
 
 - Existing authenticated Docker Hub and GitHub tooling for publishing; pulling public images needs no secret.
 - Node.js 22+, npm, Git, Docker/buildx and kubectl on the operator's Mac.
 - `~/.kube/hen-common-leedsichthys.config`; namespace `henrik`; Knative Serving already installed.
-- Names `super-useful`, `super-evil`, `weather-demo-api-key` reserved for this demonstration.
+- Names `super-useful` and `super-evil` reserved for this demonstration.
 
 ```bash
 cd /Users/henrik/local-repos/prokube/agent-sandbox-security-demo
@@ -23,9 +22,10 @@ export KUBECONFIG="$HOME/.kube/hen-common-leedsichthys.config"
 ```
 
 The script checks connectivity once, namespace, Knative CRD, and Docker image digests. It
-refuses to overwrite unlabelled/non-demo resources. It creates/updates the test-key Secret
-and only the two named services, waits up to 180 seconds for readiness, prints URLs, and
-checks both health endpoints, authentication and collector behavior. Re-running is idempotent.
+refuses to overwrite unlabelled/non-demo resources. It creates/updates only the two named
+services, waits up to 180 seconds for readiness, prints URLs, and checks internal health,
+unauthenticated weather and collector behavior. No backend Secret is created or mounted.
+Re-running is idempotent. Platform-route credentials are managed separately.
 No namespace, CRD, ingress, CNI or other cluster-wide resources are created or modified.
 Offline failure explicitly reports deployment pending. No kubeconfig context is changed.
 
@@ -123,7 +123,8 @@ kubectl --kubeconfig "$HOME/.kube/hen-common-leedsichthys.config" -n henrik get 
 ```
 
 Log followers cover current pods; restart them after redeployment or scaling to capture new pods.
-Health success alone does not verify authenticated weather. Run `test-services.sh` as well.
+Internal health success does not verify platform authentication. Set `PLATFORM_ROUTE_API_KEY`
+in the operator environment and run `node scripts/verify-platform-route.js` separately.
 If the Mac cannot resolve private routes, run endpoint checks from a permitted network.
 
 After the talk, remove only these labelled demo resources (never delete namespace `henrik`):

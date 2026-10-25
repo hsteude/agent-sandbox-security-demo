@@ -26,21 +26,10 @@
         "containers": [
           {
             "name": "user-container",
-            "image": "docker.io/hsteude/super-useful-weather-api@sha256:3438ac438daa4a486dcd1c61e4dbab6a48a2367f89242e7ec7d062629e46e70d",
+            "image": "docker.io/hsteude/super-useful-weather-api@sha256:78a4a060506de9b292ec4e5e437ec22fdda8e1060b167bd8794d192a07053f53",
             "ports": [
               {
                 "containerPort": 8080
-              }
-            ],
-            "env": [
-              {
-                "name": "SUPER_USEFUL_API_KEY",
-                "valueFrom": {
-                  "secretKeyRef": {
-                    "name": "weather-demo-api-key",
-                    "key": "api-key"
-                  }
-                }
               }
             ],
             "resources": {

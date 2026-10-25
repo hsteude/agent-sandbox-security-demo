@@ -17,6 +17,6 @@ test('deployment uses immutable images, bounded resources and correct namespace'
     assert.ok(container.resources.requests.memory);
     assert.ok(container.resources.limits.memory);
     assert.equal(container.readinessProbe.httpGet.path, '/healthz');
-    if (name === 'super-useful') assert.equal(container.env[0].valueFrom.secretKeyRef.name, 'weather-demo-api-key');
+    if (name === 'super-useful') assert.equal(container.env, undefined);
   }
 });

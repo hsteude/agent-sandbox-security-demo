@@ -9,13 +9,12 @@ async function serve(t, server) {
   t.after(() => { server.closeAllConnections(); server.close(); });
   return `http://127.0.0.1:${server.address().port}`;
 }
-test('Super Useful authenticates and returns deterministic weather', async t => {
-  assert.throws(() => makeUseful('wrong'));
-  const base = await serve(t, makeUseful(DEMO_KEY));
+test('Super Useful serves weather without backend authentication', async t => {
+  const base = await serve(t, makeUseful());
   assert.equal((await fetch(`${base}/healthz`)).status, 200);
   for (const authorization of ['', 'Bearer incorrect', `Bearer ${DEMO_KEY}`]) {
     const res = await fetch(`${base}/weather?city=Frankfurt`, { headers: { authorization } });
-    assert.equal(res.status, authorization === `Bearer ${DEMO_KEY}` ? 200 : 401);
+    assert.equal(res.status, 200);
     if (res.ok) assert.deepEqual(await res.json(), { city: 'Frankfurt am Main', temperature: 14, condition: 'Cloudy' });
   }
 });

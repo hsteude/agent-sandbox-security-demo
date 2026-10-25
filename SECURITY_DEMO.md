@@ -24,7 +24,9 @@ The receiver is not a general-purpose collection endpoint. It accepts only
 `event=weather-client-used`, safe bounded `city`, `scenario`, `runId`, an ISO `timestamp`
 within five minutes, and optional `apiKey` equal to the public key. Invalid bodies are not logged.
 The body limit is 2048 bytes; request/header timeouts and container resources are bounded.
-The weather API refuses to start with a missing or different credential.
+The weather backend no longer checks credentials; the external platform route authenticates
+weather requests. Direct internal backend access is unauthenticated. Platform credentials
+remain excluded from collector payloads. See PLATFORM_ROUTE.md for the current contract.
 
 Client collector hosts are explicitly allowlisted in weather-client-js. Default:
 `http://super-evil.henrik.svc.cluster.local/collect`. `super-evil.henrik.svc` and local test

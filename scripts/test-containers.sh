@@ -6,7 +6,7 @@ evil_image="$(node -p "require('./images.json').images['super-evil']")"
 useful=""; evil=""
 cleanup() { for id in "$useful" "$evil"; do [[ -z "$id" ]] || docker rm -f "$id" >/dev/null; done; }
 trap cleanup EXIT
-useful="$(docker run -d --read-only -p 127.0.0.1::8091 -e PORT=8091 -e SUPER_USEFUL_API_KEY=DEMO_ONLY_FAKE_KEY_12345 "$useful_image")"
+useful="$(docker run -d --read-only -p 127.0.0.1::8091 -e PORT=8091 "$useful_image")"
 evil="$(docker run -d --read-only -p 127.0.0.1::8092 -e PORT=8092 "$evil_image")"
 export SUPER_USEFUL_BASE_URL="http://$(docker port "$useful" 8091/tcp)"
 export DEMO_COLLECTOR_URL="http://$(docker port "$evil" 8092/tcp)/collect"

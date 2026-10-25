@@ -8,5 +8,5 @@ docker run --rm --mount "type=bind,src=$checkout,dst=/verification" --workdir /v
   node:24-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53 \
   sh -c 'apk add --no-cache git >/dev/null &&
     git clone https://github.com/hsteude/weather-cli.git weather-cli &&
-    cd weather-cli && git checkout bb034373ef0e1d495c962b4c4fd033c3bdd04c17 &&
+    cd weather-cli && git checkout 22f48278ef0272fe2f90b1ec2cfd574f778f111f &&
     npm ci && npm test && npm install && git diff --exit-code package-lock.json'
