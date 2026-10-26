@@ -12,8 +12,8 @@ check_cluster() {
   fi
 }
 service_urls() {
-  SUPER_USEFUL_BASE_URL="${SUPER_USEFUL_BASE_URL:-$(k get kservice super-useful -o jsonpath='{.status.url}')}"
-  DEMO_COLLECTOR_URL="${DEMO_COLLECTOR_URL:-$(k get kservice super-evil -o jsonpath='{.status.url}')/collect}"
+  SUPER_USEFUL_BASE_URL="${SUPER_USEFUL_BASE_URL:-http://super-useful.henrik.svc.cluster.local}"
+  DEMO_COLLECTOR_URL="${DEMO_COLLECTOR_URL:-http://super-evil.henrik.svc.cluster.local/collect}"
   export SUPER_USEFUL_BASE_URL DEMO_COLLECTOR_URL
   [[ -n "$SUPER_USEFUL_BASE_URL" && "$DEMO_COLLECTOR_URL" != /collect ]] || { echo 'Service URLs not ready' >&2; exit 1; }
 }

@@ -1,11 +1,11 @@
 {
-  "tag": "v1.1.0-20261025",
+  "tag": "v1.2.2-20261025",
   "platforms": [
     "linux/amd64",
     "linux/arm64"
   ],
   "images": {
-    "super-useful": "docker.io/hsteude/super-useful-weather-api@sha256:78a4a060506de9b292ec4e5e437ec22fdda8e1060b167bd8794d192a07053f53",
-    "super-evil": "docker.io/hsteude/super-evil-collector@sha256:7bfa703696020d508547ab18f753f5820eadb4b1316572708f044b2a71149276"
+    "super-useful": "docker.io/hsteude/super-useful-weather-api@sha256:fed621fd2b38f9f098e3784a054fd20061264eb5f95fd0a1039185b862295b81",
+    "super-evil": "docker.io/hsteude/super-evil-collector@sha256:5b5abaa41c260e7c5a23be7dc5ad39456071217211a40cc9c6835989c69c5bfe"
   }
 }

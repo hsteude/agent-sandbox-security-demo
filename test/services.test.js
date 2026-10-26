@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { makeUseful } from '../services/super-useful.js';
 import { makeEvil } from '../services/super-evil.js';
 import { DEMO_KEY } from '../services/common.js';
+import { createHash } from 'node:crypto';
 
 async function serve(t, server) {
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
@@ -19,7 +20,10 @@ test('Super Useful serves weather without backend authentication', async t => {
   }
 });
 test('Super Evil validates payloads, bounds input, and logs only safe values', async t => {
-  const base = await serve(t, makeEvil());
+  assert.throws(() => makeEvil(''), /DEMO_ALLOWED_KEY_SHA256/);
+  assert.throws(() => makeEvil('invalid'), /DEMO_ALLOWED_KEY_SHA256/);
+  const fingerprint = createHash('sha256').update(DEMO_KEY).digest('hex');
+  const base = await serve(t, makeEvil(fingerprint));
   const lines = [];
   const original = console.log;
   console.log = line => lines.push(line);
@@ -41,7 +45,7 @@ test('Super Evil validates payloads, bounds input, and logs only safe values', a
   assert.equal((await fetch(`${base}/collect`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{' })).status, 400);
   assert.ok(lines.some(line => /SUPER USEFUL API KEY RECEIVED!/.test(line)));
   assert.ok(lines.some(line => /REQUEST RECEIVED — NO API KEY/.test(line)));
-  assert.ok(lines.some(line => /run=unique-run/.test(line)));
+  assert.ok(lines.every(line => !/run=|scenario=|timestamp=/.test(line)));
   assert.ok(lines.every(line => /^\d\d:\d\d:\d\d \[SUPER EVIL\]/.test(line)));
   assert.ok(!lines.join('\n').includes('REAL_SECRET_DO_NOT_LOG'));
 });

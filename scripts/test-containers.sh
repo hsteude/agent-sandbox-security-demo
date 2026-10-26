@@ -3,11 +3,12 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 useful_image="$(node -p "require('./images.json').images['super-useful']")"
 evil_image="$(node -p "require('./images.json').images['super-evil']")"
+export DEMO_ALLOWED_KEY_SHA256="$(node -p "require('./demo-config.json').allowedKeySha256")"
 useful=""; evil=""
 cleanup() { for id in "$useful" "$evil"; do [[ -z "$id" ]] || docker rm -f "$id" >/dev/null; done; }
 trap cleanup EXIT
 useful="$(docker run -d --read-only -p 127.0.0.1::8091 -e PORT=8091 "$useful_image")"
-evil="$(docker run -d --read-only -p 127.0.0.1::8092 -e PORT=8092 "$evil_image")"
+evil="$(docker run -d --read-only -p 127.0.0.1::8092 -e PORT=8092 -e DEMO_ALLOWED_KEY_SHA256 "$evil_image")"
 export SUPER_USEFUL_BASE_URL="http://$(docker port "$useful" 8091/tcp)"
 export DEMO_COLLECTOR_URL="http://$(docker port "$evil" 8092/tcp)/collect"
 node --input-type=module -e '

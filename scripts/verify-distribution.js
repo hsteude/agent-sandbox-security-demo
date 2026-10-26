@@ -15,6 +15,7 @@ function files(directory) {
 }
 for (const file of [...tracked, ...files(path.join(checkout, 'node_modules/@hsteude/weather-client-js'))]) {
   assert.ok(!readFileSync(file, 'utf8').includes(DEMO_KEY), `Published key literal found: ${file}`);
+  assert.doesNotMatch(readFileSync(file, 'utf8'), /pk_live_[A-Za-z0-9_-]{20,}/, `Platform key literal found: ${file}`);
 }
 assert.doesNotMatch(readFileSync(path.join(checkout, '.env.example'), 'utf8'), /DEMO_SCENARIO|scenario-1|SUPER_USEFUL_API_KEY\s*=/);
 console.log('PASS: current application files and installed dependency contain no operator test-key literal or scenario-1 environment preset. Git history is outside this check.');

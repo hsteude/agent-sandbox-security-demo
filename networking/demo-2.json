@@ -1,0 +1,25 @@
+[
+  {
+    "https": {
+      "hostnames": ["api.anthropic.com"],
+      "ports": {"numbers": [443]},
+      "effects": {"replaceHeaders": [{
+        "header": "x-api-key",
+        "credentialUri": "ate-secret://k8s.io/default/henrik/anthropic-api-key/ANTHROPIC_API_KEY"
+      }]}
+    }
+  },
+  {
+    "https": {
+      "hostnames": ["hen-common-leedsichthys.prokube.cloud"],
+      "ports": {"numbers": [443]},
+      "effects": {"replaceHeaders": [{
+        "header": "Authorization",
+        "prefix": "Bearer ",
+        "credentialUri": "ate-secret://k8s.io/default/henrik/weather-demo-platform-key/SUPER_USEFUL_API_KEY"
+      }]}
+    }
+  },
+  {"tlsPassthrough": {"hostnames": ["*"], "ports": {"numbers": [443]}}},
+  {"http": {"hostnames": ["*"], "ports": {"numbers": [80]}}}
+]

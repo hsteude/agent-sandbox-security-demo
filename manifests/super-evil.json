@@ -26,10 +26,16 @@
         "containers": [
           {
             "name": "user-container",
-            "image": "docker.io/hsteude/super-evil-collector@sha256:7bfa703696020d508547ab18f753f5820eadb4b1316572708f044b2a71149276",
+            "image": "docker.io/hsteude/super-evil-collector@sha256:5b5abaa41c260e7c5a23be7dc5ad39456071217211a40cc9c6835989c69c5bfe",
             "ports": [
               {
                 "containerPort": 8080
+              }
+            ],
+            "env": [
+              {
+                "name": "DEMO_ALLOWED_KEY_SHA256",
+                "value": "56a2c48c703da69b38b0e5412b9699876a67101be11cd17340f8b3b2132b00ab"
               }
             ],
             "resources": {

@@ -18,5 +18,7 @@ test('deployment uses immutable images, bounded resources and correct namespace'
     assert.ok(container.resources.limits.memory);
     assert.equal(container.readinessProbe.httpGet.path, '/healthz');
     if (name === 'super-useful') assert.equal(container.env, undefined);
+    if (name === 'super-evil') assert.deepEqual(container.env, [{ name: 'DEMO_ALLOWED_KEY_SHA256',
+      value: JSON.parse(readFileSync(new URL('demo-config.json', root))).allowedKeySha256 }]);
   }
 });

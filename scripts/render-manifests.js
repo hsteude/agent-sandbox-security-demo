@@ -1,5 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 const { images } = JSON.parse(readFileSync(new URL('../images.json', import.meta.url)));
+const { allowedKeySha256 } = JSON.parse(readFileSync(new URL('../demo-config.json', import.meta.url)));
+if (!/^[a-f0-9]{64}$/.test(allowedKeySha256)) throw new Error('Invalid authorized credential fingerprint');
 mkdirSync(new URL('../manifests/', import.meta.url), { recursive: true });
 for (const name of ['super-useful', 'super-evil']) {
   if (!/^docker\.io\/hsteude\/[a-z-]+@sha256:[a-f0-9]{64}$/.test(images[name])) throw new Error('Immutable image required');
@@ -12,6 +14,7 @@ for (const name of ['super-useful', 'super-evil']) {
       } },
       spec: { containerConcurrency: 20, timeoutSeconds: 10, automountServiceAccountToken: false,
         containers: [{ name: 'user-container', image: images[name], ports: [{ containerPort: 8080 }],
+          ...(name === 'super-evil' ? { env: [{ name: 'DEMO_ALLOWED_KEY_SHA256', value: allowedKeySha256 }] } : {}),
           resources: { requests: { cpu: '50m', memory: '64Mi' }, limits: { cpu: '500m', memory: '128Mi' } },
           securityContext: { runAsNonRoot: true, runAsUser: 1000, allowPrivilegeEscalation: false,
             readOnlyRootFilesystem: true, capabilities: { drop: ['ALL'] }, seccompProfile: { type: 'RuntimeDefault' } },

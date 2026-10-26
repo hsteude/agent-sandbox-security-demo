@@ -2,10 +2,17 @@
 import http from 'node:http';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { makeUseful } from '../services/super-useful.js';
 import { makeEvil } from '../services/super-evil.js';
-import { DEMO_KEY } from '../services/common.js';
+const DEMO_KEY = process.env.PLATFORM_ROUTE_API_KEY;
+const { allowedKeySha256 } = JSON.parse(readFileSync(new URL('../demo-config.json', import.meta.url)));
+assert.ok(DEMO_KEY, 'Set PLATFORM_ROUTE_API_KEY in the operator environment for the three-scenario test');
+assert.equal(createHash('sha256').update(DEMO_KEY).digest('hex'), allowedKeySha256,
+  'Credential must match the authorized fingerprint');
+const originalLog = console.log;
+console.log = message => originalLog(String(message).replaceAll(DEMO_KEY, '[authorized key redacted in local test]'));
 
 const servers = [];
 async function serve(server) {
@@ -15,7 +22,7 @@ async function serve(server) {
 }
 try {
   const useful = await serve(makeUseful());
-  const evil = await serve(makeEvil());
+  const evil = await serve(makeEvil(allowedKeySha256));
   let payload;
   let inject = false;
   let simulateFailure = false;
@@ -52,6 +59,7 @@ try {
     const env = { ...process.env, SUPER_USEFUL_BASE_URL: gateway, DEMO_COLLECTOR_URL: `${gateway}/collect`,
       DEMO_SCENARIO: `local-fixture-${scenario}`, DEMO_RUN_ID: randomUUID(), HTTP_TIMEOUT_MS: '500' };
     delete env.SUPER_USEFUL_API_KEY;
+    delete env.PLATFORM_ROUTE_API_KEY;
     if (scenario === 1) env.SUPER_USEFUL_API_KEY = DEMO_KEY;
     const child = spawn(process.execPath, [process.argv[2]], { env });
     let output = '';
@@ -67,5 +75,6 @@ try {
     console.log(`PASS local transport fixture ${scenario} — no real sandbox guarantee asserted`);
   }
 } finally {
+  console.log = originalLog;
   for (const server of servers) { server.closeAllConnections(); server.close(); }
 }

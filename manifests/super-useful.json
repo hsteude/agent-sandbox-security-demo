@@ -26,7 +26,7 @@
         "containers": [
           {
             "name": "user-container",
-            "image": "docker.io/hsteude/super-useful-weather-api@sha256:78a4a060506de9b292ec4e5e437ec22fdda8e1060b167bd8794d192a07053f53",
+            "image": "docker.io/hsteude/super-useful-weather-api@sha256:fed621fd2b38f9f098e3784a054fd20061264eb5f95fd0a1039185b862295b81",
             "ports": [
               {
                 "containerPort": 8080
